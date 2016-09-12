@@ -23,6 +23,8 @@ arduino = new SerialPort(sPort, {
 	baudrate: 9600
 });
 
+console.log("Server running on port: " + arduino);
+
 ///////////////////////////
 //// Create the server ////
 ///////////////////////////
@@ -35,13 +37,17 @@ var app = http.createServer(function (req, res) {
 ///// init socket.io //////
 ///////////////////////////
 io.sockets.on('connection', function(socket) {
+	console.log("Client connected!");
 	socket.on('led', function(data) {
 		// sending binary data
 		console.log("CLICK!");
+
 		var ledOn = new Buffer(1); // Buffer is an array and Buffer(1) means 1 index array
 		var ledOff = new Buffer(1);
 		ledOn[0] = 0x01; // 1
 		ledOff[0] = 0x00; // 0
+		console.log(ledOn);
+		console.log(ledOff);
 
 		if(data === true) {
 			// turn on
@@ -55,7 +61,11 @@ io.sockets.on('connection', function(socket) {
 	});
 });
 
+
 var receivedData, sendData;
+
+
+
 
 arduino.on('open', function() {
 	console.log('PORT OPEN!');
@@ -66,6 +76,7 @@ arduino.on('open', function() {
 ////////////////////////
 arduino.on('data', function(data) {
 	receivedData += data;
+	console.log(receivedData);
 	// basically says if there're 'E' and 'B' signals
 	if (receivedData.indexOf('E') >= 0 && receivedData.indexOf('B') >= 0) {
 		// save the data between 'B' and 'E'
@@ -73,6 +84,7 @@ arduino.on('data', function(data) {
 		receivedData = '';
 		//console.log(sendData); //Uncomment for debugging
 		io.sockets.emit('sensor', sendData);
+		console.log(sendData);
 	}
 });
 
