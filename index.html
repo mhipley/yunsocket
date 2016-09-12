@@ -38,16 +38,7 @@
 	</head>
 	<body>
 		<div id="wrapper">
-			<pre>.##....##.##.....##.##....##..######...#######...######..##....##.########.########
-..##..##..##.....##.###...##.##....##.##.....##.##....##.##...##..##..........##...
-...####...##.....##.####..##.##.......##.....##.##.......##..##...##..........##...
-....##....##.....##.##.##.##..######..##.....##.##.......#####....######......##...
-....##....##.....##.##..####.......##.##.....##.##.......##..##...##..........##...
-....##....##.....##.##...###.##....##.##.....##.##....##.##...##..##..........##...
-....##.....#######..##....##..######...#######...######..##....##.########....##...
-</pre>
-			<p>fito_segrera / <a href="http://fii.to">fii.to</a></p>
-			<p>This project uses nodejs, serialport and socket.io to create a webserver on the arduino Yun and have full controll of the arduino chip through an online interface. For this example I use a <a href="http://www.hobbyist.co.nz/?q=documentations/wiring-up-dht11-temp-humidity-sensor-to-your-arduino">DHT11Temp/Hum Sensor</a> connected to Analog 0 and a regular LED on pin 13.</p>
+
 			<p>-----------------------------</p>
 			<button id="toggleLED" onclick="led();">LED ON/OFF</button>
 			<h4>receiving sensor value:</h4>
@@ -55,25 +46,27 @@
 			<p>-----------------------------</p>
 			<p>Github repository with <a href="https://github.com/fitosegrera/yunsocket">source code</a></p>
 		</div>
-		<script src="http://yunshaman.local:9001/socket.io/socket.io.js"></script>
+		<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
 		<script>
-			var socket = io.connect('http://yunshaman.local:9001');
+			var socket = io.connect('http://breathless1.local:9001');
 			var isOn = false;
 			function led() {
 				if(isOn == false) {
 					isOn = true;
 					// send signal
 					socket.emit('led', true);
-					//console.log("ON"); //Uncomment for debugging
+					console.log("ON"); //Uncomment for debugging
 				} else if(isOn == true) {
 					isOn = false;
 					// send signal
 					socket.emit('led', false);
-					//console.log("OFF"); //Uncomment for debugging
+					console.log("OFF"); //Uncomment for debugging
 				}
 			}
 			socket.on('sensor', function(data) {
+				alert("Connected!");
 				document.getElementById("sensorVal").innerHTML = data;
+				console.log(data);
 			});
 		</script>
 	</body>
